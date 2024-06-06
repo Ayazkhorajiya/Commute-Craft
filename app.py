@@ -79,38 +79,17 @@ with app.app_context():
     db.create_all()
     
 
-
-
-
+    
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
-
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return render_template('register.html', error='User with this email already exists.')
-
-        new_user = User(name=name, email=email, password=password)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect('/login')
-
-    return render_template('register.html')
-
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/Reglog', methods=['POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form['Email']
+        password = request.form['Password']
 
         user = User.query.filter_by(email=email).first()
 
@@ -118,32 +97,30 @@ def login():
             session['email'] = user.email
             return redirect('/dashboard')
         else:
-            return render_template('login.html', error='Invalid user')
+            return render_template('Reglog.html', error='Invalid user')
 
-    return render_template('login.html')
+    return render_template('index.html')
 
-@app.route('/driver_login', methods=['POST'])
-def driver_login():
+
+@app.route('/Reglog', methods=['POST'])
+def register():
     if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
+        name = request.form['Name']
+        email = request.form['Email']
+        password = request.form['Password']
 
-        # Check if the driver already exists
-        existing_driver = Driver.query.filter_by(email=email).first()
-        if existing_driver:
-            return render_template('driver_login.html', error='Driver with this email already exists.')
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return render_template('Reglog.html', error='User with this email already exists.')
 
-        # Create a new driver
-        new_driver = Driver(name=name, email=email, password=password)
-        db.session.add(new_driver)
+        new_user = User(name=name, email=email, password=password)
+        db.session.add(new_user)
         db.session.commit()
+        return redirect('/index.html')
 
-        # Redirect to the driver login page
-        return redirect('/dashboard')
+    return render_template('index.html')
 
-    # If it's not a POST request, redirect to the driver registration page
-    return redirect('/driver_login')
+
 
 
 
